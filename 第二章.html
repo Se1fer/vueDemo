@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="name" placeholder="你的名字"/>
+        <h1>你好,{{name}}</h1>
+    </div>
+    <div id="app-date">
+        {{date}}
+    </div>
+    <div id="app-html">
+        <span v-html="link"></span>
+    </div>
+    <div id="app-pre">
+        <span v-pre>{{pre}}</span>
+    </div>
+    <div id="app-three">
+        {{number/10}}
+        {{isOK ? '确认':'取消'}}
+        {{text.split(',').reverse().join(',')}}
+    </div>
+    <div id="app-filter">
+        {{date|formatDate}}
+        <!-- 
+            //可以进行串联
+            {{message|filterA|filterB}}
+            //接收参数
+            {{message|filterA('arg1','arg2')}}
+         -->
+    </div>
+    <div id="app-if">
+        <p v-if="show">显示这段文字</p>
+        <button @click="hideText">点击隐藏</button>
+    </div>
+    <div id="app-href">
+        <a v-bind:href="url">这是个链接</a>
+        <img :src="imgUrl" alt="网络" />
+    </div>
+    
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <script>
+        var mydata = {
+            name:'',
+            a:2
+        }
+        var app =  new Vue({
+            el:document.getElementById('app'),
+            data:mydata,
+            created: function() {
+                console.log(this.a);
+            },
+            mounted: function() {
+                console.log(this.$el);
+            },
+        });
+        var appDate = new Vue({
+            el:'#app-date',
+            data:{
+                date:new Date()
+            },
+            mounted:function(){
+                var _this = this;//声明一个变量指向vue的this，保证作用域一致。
+                this.timer = setInterval(function(){
+                    _this.date = new Date();
+                },1000);
+            },
+            beforeDestroy() {
+                clearInterval(this.timer);
+            },
+            /* 
+            created 实例创建完成后调用，此阶段完成了数据的观测等，但尚未挂载，$el还不可用。
+                    需要初始化处理一些数据时会比较有用。
+            mounted el挂载到实例上后调用，一般我们的第一个业务逻辑会在这里展开。
+            beforeDestroy 实例销毁之前调用。主要解绑一些addEventListener 监听的事件等。
+
+            */
+        })
+         /* v-html 绑定html文本 */
+        var appHtml = new Vue({
+            el:'#app-html',
+            data:{
+                link:`<a href="#">这是一个链接</a>`
+            }
+        })
+         /* v-pre 不编译次节点以及子节点 */
+        var appPre = new Vue({
+            el:'#app-pre',
+            data:{
+                pre:'这里内容不会被编译的'
+            }  
+        })
+        /* 三目表达式 */
+        var appThree = new Vue({
+            el:'#app-three',
+            data:{
+                number:100,
+                isOK:false,
+                text:'123,456'
+            }
+        })
+        /* 过滤器 */
+        var padDate = function(value){
+            return value < 10 ? '0' + value:value;
+        }
+        var appFilter = new Vue({
+            el:'#app-filter',
+            data:{
+                date:new Date()
+            },
+            filters:{
+                formatDate:function(values){
+                    var date = new Date(values);
+                    var year = date.getFullYear();
+                    var month = padDate(date.getMonth()+1);
+                    var day = padDate(date.getDate());
+                    var hours  = padDate(date.getHours());
+                    var minutes = padDate(date.getMinutes());
+                    var seconds = padDate(date.getSeconds());
+                    return year+'-'+month+'-'+day+'-'+hours+':'+minutes+':'+seconds;
+                }
+            },
+            mounted(){
+                var _this = this;
+                this.timer = setInterval(function(){
+                    _this.date = new Date();
+                },1000);
+            },
+            beforeDestroy(){
+                if(this.timer){
+                    clearInterval(this.timer);
+                }
+            }
+        })
+        /* 指令与事件 */
+        var appif = new Vue({
+            el:"#app-if",
+            data:{
+                show:true
+            },
+            methods: {
+                hideText:function(){
+                    this.close();
+                },
+                close:function(){
+                    this.show = this.show ? false : true;
+                }
+            },
+        })
+        var apphref = new Vue({
+            el:"#app-href",
+            data:{
+                url:"https://www.baidu.com",
+                imgUrl:"http://image.baidu.com/search/detail?z=0&word=%E6%91%84%E5%BD%B1%E5%B8%88%E9%AD%8F%E5%A4%A9%E6%98%8A&hs=0&pn=0&spn=0&di=0&pi=61828057508&tn=baiduimagedetail&is=0%2C0&ie=utf-8&oe=utf-8&cs=2246317622%2C1022215065&os=&simid=&adpicid=0&lpn=0&fm=&sme=&cg=&bdtype=-1&oriquery=&objurl=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fac4bd11373f08202fee6996a45fbfbedab641b6a.jpg"
+            }
+        })
+    </script>
+</body>
+</html>

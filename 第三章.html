@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        {{reverseText}}
+    </div>
+    <div id="appprice">
+        总价：{{prices}}
+    </div>
+    <div id="appgetset">
+        姓名：{{fullname}}
+    </div>
+    <div id="appother">
+        {{reverseText}}
+    </div>
+    <div id="appnow">
+        {{now}}
+        {{now1()}}
+    </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script>
+    /* 计算属性 */
+    var app = new Vue({
+        el:"#app",
+        data:{
+            text:"123,456"
+        },
+        computed:{
+            reverseText:function(){
+                return this.text.split(",").reverse().join(",");
+            }
+        },
+    });
+    var appPrice = new Vue({
+        el:"#appprice",
+        data:{
+            package1:[
+                {
+                    name:"iphone7",
+                    price:7899,
+                    count:1
+                },
+                {
+                    name:"iphone8",
+                    price:9899,
+                    count:1
+                }
+            ],
+            package2:[
+                {
+                    name:"andriod",
+                    price:3588,
+                    count:2
+                },
+                {
+                    name:"balana",
+                    price:1288,
+                    count:10
+                }
+            ]
+        },
+        computed:{
+            prices:function(){
+                var newprices = 0;
+                for(var i = 0; i < this.package1.length; i++){
+                    let price = this.package1[i].price;
+                    let count = this.package1[i].count;
+                    newprices += price * count;
+                }
+                for(var i = 0; i < this.package2.length; i++){
+                    newprices += this.package2[i].price * this.package2[i].count;
+                }
+                return newprices;
+            }
+        }
+    });
+    /* 计算属性 get set */
+    var appgetset = new Vue({
+        el:"#appgetset",
+        data:{
+            firstname:'jack',
+            lastname:'green'
+        },
+        computed:{
+            fullname:{
+                get:function(){
+                    return this.firstname+' '+this.lastname;
+                },
+                set:function(newValue){
+                    let names = newValue.split(' ');
+                    this.firstname = names[0];
+                    this.lastname = names[names.length - 1];
+                }
+            }
+        }
+    });
+    appgetset.fullname = "rose";
+    /* 计算属性 互相引用 */
+    var appother = new Vue({
+        el:"#appother",
+        data:{
+            
+        },
+        computed:{
+            reverseText:function(){
+                return app.text.split(',').reverse().join(',');
+            }
+        }
+    })
+    /* 计算属性 缓存 */
+    var appnow = new Vue({
+        el:"#appnow",
+        data:{
+
+        },
+        computed:{
+            now:function(){
+                return Date.now();
+            }
+        },
+        methods: {
+            now1:function(){
+                return Date.now();
+            }
+        },
+    })
+</script>
+</html>
