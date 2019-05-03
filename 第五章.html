@@ -48,7 +48,6 @@
 <script>
     /* v-clock 该指令会在页面编译完成之后去除。
     一般用于页面加载时太慢导致的样式错乱，配合样式 display:none 使用提升用户体验。
-    
     */
     var appCloak = new Vue({
         el: "#appCloak",
@@ -104,7 +103,7 @@
                 this.show = this.show?false:true;
             }
         }
-    })
+    });
 </script>
 <style>
     [v-cloak] {
