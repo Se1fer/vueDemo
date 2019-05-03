@@ -1,18 +1,47 @@
 <!-- 内置指令 -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
     <div id="appCloak">
         {{message}}
     </div>
     <div id="appOnce" v-once>
         {{message}}
+    </div>
+    <div id="appIf">
+        <div v-if="status == 1">当status为1的时候显示这一行</div>
+        <div v-else-if="status == 2">当status为2的时候显示这一行</div>
+        <div v-else>不然显示这一行</div>
+    </div>
+    <div id="appTemplate">
+        <template v-if="status === 1">
+            <p>这是一段文本</p>
+            <p>这是一段文本</p>
+            <p>这是一段文本</p>
+        </template>
+    </div>
+    <div id="appKey">
+        <template v-if="type == 'username'">
+            <label for="">用户名：</label>
+            <input type="text" placeholder="请输入用户名" key="name-input">
+        </template>
+        <template v-else>
+            <label for="">邮箱：</label>
+            <input type="text" placeholder="请输入邮箱" key="mail-input">
+        </template>
+        <button @click="handlerToggleClick()">切换</button>
+    </div>
+    <div id="appShow">
+        <div v-show="show">这是一段显示内容</div>
+        <button @click="showClick">显示\隐藏 信息</button>
     </div>
 </body>
 <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
@@ -22,24 +51,65 @@
     
     */
     var appCloak = new Vue({
-        el:"#appCloak",
-        data:{
-            message:"这是一段文本"
+        el: "#appCloak",
+        data: {
+            message: "这是一段文本"
         }
     })
     /* v-once 该指令表明页面只加载一次，后续不跟随变量变化而变化。
      */
-     var appOnce = new Vue({
-         el:"#appOnce",
-         data:{
-             message:"文本不会发生变化"
-         }
-     });
-     appOnce.message = "文本改变了";
+    var appOnce = new Vue({
+        el: "#appOnce",
+        data: {
+            message: "文本不会发生变化"
+        }
+    });
+    appOnce.message = "文本改变了";
+    /* v-if v-else-if v-else 条件判断语句，v-else-if 需要紧跟 v-if,v-else 需要紧跟 v-else-if*/
+    var appIf = new Vue({
+        el: "#appIf",
+        data: {
+            status: 1
+        }
+    });
+    appIf.status = 3;
+    /* 如果 需要条件渲染多个元素，则使用 vue内置的template 最终渲染的时候不会包含该元素 */
+    var appTemplate = new Vue({
+        el: "#appTemplate",
+        data: {
+            status: 1
+        }
+    });
+    /* 用 vue 的 key 属性来觉得条件判断中的元素是否重用 */
+    /* 此处 input 因为带key属性，所以页面渲染的时候不会复用，但是label还是会服用 */
+    var appKey = new Vue({
+        el:"#appKey",
+        data:{
+            type:'username'
+        },
+        methods: {
+            handlerToggleClick:function(){
+                this.type = this.type === "username"?"mail":"username";
+            }
+        },
+    });
+    /* v-show 显示或者隐藏元素，只是对display 做处理 */
+    var appShow = new Vue({
+        el:"#appShow",
+        data:{
+            show:false
+        },
+        methods:{
+            showClick:function(){
+                this.show = this.show?false:true;
+            }
+        }
+    })
 </script>
 <style>
-    [v-cloak]{
+    [v-cloak] {
         display: none;
     }
 </style>
+
 </html>
