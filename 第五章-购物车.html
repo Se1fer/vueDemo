@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+            
+<body>
+    <div id="app" v-cloak>
+        <template v-if="list.length">
+            <table>
+                <thead>
+                    <th>序号</th>
+                    <th>商品</th>
+                    <th>价格</th>
+                    <th>数量</th>
+                    <th>操作</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(good,index) in list">
+                        <td>
+                            {{index+1}}
+                        </td>
+                        <td>
+                            {{good.name}}
+                        </td>
+                        <td>
+                            {{good.price}}
+                        </td>
+                        <td>
+                            <button @click="handleReduce(index)" :disabled="good.count == 1">-</button>
+                            {{good.count}}
+                            <button @click="handleAdd(index)">+</button>
+                        </td>
+                        <td>
+                            <button @click="handleDelete(index)">删除</button>
+                        </td>
+                    </tr>
+                    <td ></td>
+                </tbody>
+            </table>
+            <div>
+                总价：￥ {{totalPrice}}
+            </div>
+        </template>
+        <div v-else>购物车是空</div>
+    </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script>
+    var data = [
+        {
+            name:'杜蕾斯',
+            price:26.99,
+            count:1
+        },
+        {
+            name:'冈本',
+            price:36.99,
+            count:1
+        },
+        {
+            name:'印度神油',
+            price:56.99,
+            count:1
+        }
+    ];
+    var app = new Vue({
+        el:"#app",
+        data:{
+            list:data
+        },
+        methods: {
+            handleReduce:function(index){
+               let count = this.list[index].count;
+               if(count == 1){
+                   return;
+               }else{
+                   this.list[index].count--;
+               }
+            },
+            handleAdd:function(index){
+                this.list[index].count++;
+            },
+            handleDelete:function(index){
+                this.list.splice(index,1);
+            }
+        },
+        computed: {
+            totalPrice:function(){
+                let prices = 0;
+                for(let i = 0; i < this.list.length; i++){
+                    prices += this.list[i].count * this.list[i].price;
+                }
+                return prices.toFixed(2).toString().replace(/\B(?=(d{3})+$)/g,',');
+            }
+        },
+    })
+
+</script>
+<style>
+    [v-cloak] {
+        display: none;
+    }
+    table{
+        border: lpx solid #e9e9e9;
+        border-collapse: collapse;
+        border-spacing: 0;
+        empty-cells: show;
+    }
+    th, td{
+        padding: 8px 16px;
+        border: lpx solid #e9e9e9;
+        text-align: left;
+    }
+    th{
+        background: #f7f7f7;
+        color: #5c6b77;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+</style>
+</html>

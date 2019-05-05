@@ -43,6 +43,60 @@
         <div v-show="show">这是一段显示内容</div>
         <button @click="showClick">显示\隐藏 信息</button>
     </div>
+    <div id="appFor">
+        <ul>
+            <li v-for="(book,index) in books" :key="index" :title='index'>
+                {{index}}-{{ book.name }}
+            </li>
+        </ul>
+    </div>
+    <div id="appObj">
+        <ul>
+            <li v-for="(value,key) in user" :key="key" :title="value">
+                {{key}}-{{value}}
+            </li>
+        </ul>
+    </div>
+    <div id="appCount">
+        <div>{{count}}</div>
+        <button @click="count++">+1</button>
+    </div>
+    <!-- 阻止单击事件冒泡 -->
+    <div @click.stop="handler"></div>
+    <!-- 提交事件不再重载 -->
+    <div @submit.prevent="handler"></div>
+    <!-- 修饰符可以串联使用 -->
+    <div @click.stop.prevent="handler"></div>
+    <!-- 只有修饰符 -->
+    <div @submit.prevent></div>
+    <!-- 添加事件监听器时使用事件捕捉模式,如果存在嵌套多层的点击按钮，当触发点击事件时，会首先被带有capture的事件捕捉，其次是自身的点击事件，然后是冒泡事件 -->
+    <div @click.capture="handler"></div>
+    <!-- 只有事件在本元素被触发时，才触发回调，换句话说，如果父元素写了@click.self，点击子元素的点击事件不会触发父元素的事件 -->
+    <div @click.self="handler"></div>
+    <!-- 只触发一次 -->
+    <div @click.once="handler"></div>
+    <!-- 按键修饰符 -->
+    <!-- 
+        .enter
+        .tab
+        .delete(捕捉“删除”和“退格”键)
+        .esc
+        .space
+        .up
+        .down
+        .left
+        .right
+        组合使用
+        .ctrl
+        .alt
+        .shift
+        .meta(Mac 下是Command 键，windows下是窗口键)
+    -->
+    <div><input type="text" @keyup.13="submit"></div>
+    <div id="appKeyup">
+        <label for="shiftenter"> shift+enter：</label>
+        <input id="shiftenter" type="text" @keyup.shift.enter="alert('xxxxx');">
+    </div>
 </body>
 <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 <script>
@@ -108,6 +162,57 @@
     区别在于：v-if只有当true的时候元素才会渲染，但是v-show控制的元素一直存在
     只是被display控制是否显示而已，再频繁控制显示的时候最好使用v-show来控制，开销会小很多
      */
+
+     /* v-for 遍历列表*/
+     var appFor = new Vue({
+         el:"#appFor",
+         data:{
+             books:[
+                 {name:'《Vue.js 实战》'},
+                 {name:'《javascript语言精粹》'},
+                 {name:'《javascript高级程序设计》'}
+             ]
+         }
+     });
+     /* 更新列表方法 push();pop();shift();unshift();splice();sort();reverse(); */
+     appFor.books.push({name:"《css揭秘》"});
+     /* 返回新数组方法 filter();concat();slice(); */
+     appFor.books = appFor.books.filter(function(item){
+        return item.name.match(/javascript/);
+     });
+     /* 修改列表中某一项的数据 */
+     //appFor.books[3] = {}//vue不会检测到数据变化
+     Vue.set(appFor.books,0,{
+         name:"《JavaScript语言精粹》"
+     })
+     /* 通过 */
+     /* v-for 遍历对象 */
+     var appObj = new Vue({
+         el:"#appObj",
+         data:{
+             user:{
+                 name:"释迦摩尼",
+                 age:2600,
+                 sex:"男"
+             }
+         }
+     });
+     /* 方法与事件 */
+     var appCount = new Vue({
+         el:"#appCount",
+         data:{
+             count:1
+         }
+     })
+     /* 修饰符 */
+     var appKeyup = new Vue({
+         el:"#appKeyup",
+         data:{
+             
+         }
+     });
+     /* 自定义修饰符 */
+     Vue.config.keyCodes.f1 = 112;//全局定义keyCode
 </script>
 <style>
     [v-cloak] {
