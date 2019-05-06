@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+</head>
+<body>
+    <div id="appModel">
+        <input type="text" v-model="message" placeholder="请输入"/>
+        {{message}}
+    </div>
+    <div id="appInput">
+        <input type="text" @input="handleInput" placeholder="请输入"/>
+        {{message}}
+    </div>
+    <div id="appRadio">
+        <input v-model="picked" type="radio" value="html" id="html">
+        <label for="html">html</label>
+        <br/>
+        <input v-model="picked" type="radio" value="js" id="js"/>
+        <label for="js">js</label>
+        <br/>
+        <input v-model="picked" type="radio" value="css" id="css"/>
+        <label for="css">css</label>
+        <br>
+        选中的值：{{picked}}
+    </div>
+    <div id="appCheckBox">
+        <input v-model="checked" type="checkbox" value="html" id="html"/>
+        <label for="html">html</label>
+        <br>
+        <input v-model="checked" type="checkbox" value="js" id="js"/>
+        <label for="js">js</label>
+        <br>
+        <input v-model="checked" type="checkbox" value="css" id="css"/>
+        <label for="css">css</label>
+        <br>
+        选中的值：{{checked}}
+    </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script>
+    /* v-model 双向绑定 
+    使用 v-model 之后，表单控件中的值不再依赖初始值，只跟所依赖的绑定数据有关。
+    */
+    var appModel = new Vue({
+        el:"#appModel",
+        data:{
+            message:''
+        }
+    });
+    /* @input */
+    var appInput = new Vue({
+        el:"#appInput",
+        data:{
+            message:''
+        },
+        methods:{
+            handleInput:function(e){
+                this.message = e.target.value;
+            }
+        }
+    });
+    /* 单选按钮 互斥 */
+    var appRadio = new Vue({
+        el:"#appRadio",
+        data:{
+            picked:'js'
+        }
+    });
+    /* 多选框 */
+    var appCheckBox = new Vue({
+        el:"#appCheckBox",
+        data:{
+            checked:['html','js']
+        }
+    })
+</script>
+</html>
