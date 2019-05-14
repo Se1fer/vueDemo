@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+</head>
+<body>
+   <!--  <Card style="width:350px;">
+        <p sort="title">与xxx聊天</p>
+        <a href="#" sort="extra">
+            <Icon type="andriod-close" size="18"></Icon>
+        </a>
+        <div style="height: 100px;"></div>
+        <div>
+            <Row :gutter="16">
+                <i-col span="17">
+                    <i-input v-model="value" placeholder="请输入..."></i-input>
+                </i-col>
+                <ion-col span="4">
+                    <i-button type="primary" icon="paper-airplane">发送</i-button>
+                </ion-col>
+            </Row>
+        </div>
+    </Card> -->
+    <div id="app">
+        <my-component></my-component>
+    </div>
+    <div id="appChild">
+        <my-component-child>
+
+        </my-component-child>
+    </div>
+    <!-- 公共引用变量 -->
+    <div id="appCommon">
+        <my-component></my-component>
+        <my-component></my-component>
+        <my-component></my-component>
+    </div>
+    <div id="appProps">
+        <sub-component message="这是来自父组件的信息">
+        </sub-component>
+    </div>
+    <div id="appBindProp">
+        <input type="text" v-model="parentMessage">
+        <bind-component :message="parentMessage">
+        </bind-component>
+    </div>
+    <div id="appSubStyle">
+        <style-component :width="width">
+        </style-component>
+    </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script>
+    /* 全局注册component */
+    Vue.component('my-component',{
+        template:'<div>这里是控件内容</div>'
+    });
+    var app = new Vue({
+        el:"#app",
+        data:{
+
+        }
+    });
+    /* 局部注册component */
+    var Child={
+        template:'<div>局部注册控件</div>'
+    }
+    var appChild = new Vue({
+        el:"#appChild",
+        components:{
+            'my-component-child':Child
+        }
+    });
+    /* 公共引用对象 ,由于data是一个共享变量，所以点击按钮的时候，三个控件上的数字都会发生变化*/
+    /* var data = {
+        counter:0
+    }
+    Vue.component('my-component',{
+        template:'<button @click="counter++">{{counter}}</button>',
+        data:function(){
+            return data;
+        }
+    });
+    var appCommon = new Vue({
+        el:"#appCommon"
+    }); */
+
+    /* 这个时候为了解决公共变量的问题，需要每次点击都返回一个新的变量 */
+    Vue.component('my-component',{
+        template:'<button @click="counter++">{{counter}}</button>',
+        data:function(){
+            return {counter:0};
+        }
+    });
+    var appCommon = new Vue({
+        el:"#appCommon",
+    });
+    /* 使用 props 来向子组件传递值 */
+    Vue.component('sub-component',{
+        props:['message'],
+        template:'<div>{{message}}</div>'
+    });
+    var appProps = new Vue({
+        el:'#appProps',
+    })
+    /* 使用 props 动态传递值给子组件 */
+    Vue.component('bind-component',{
+        props:['message'],
+        template:'<div>{{message}}</div>',
+    });
+    var appBindProp = new Vue({
+        el:'#appBindProp',
+        data:{
+            parentMessage:''
+        }
+    });
+    /* 由于子组件修改 父组件的传值会影响父组件的值 ，因为js中对象和数组是引用对象，指向同一个命名空间 */
+    Vue.component('style-component',{
+        props:['width'],
+        template:'<div :style="style"></div>',
+        computed:{
+            style:function(){
+                console.log("this.width",this.width);
+                console.log('style',this.width+'px;border:1px solid #bbb;');
+                return 'width:'+this.width+'px;border:1px solid #bbb;';
+            }
+        }
+    });
+    var appSubStyle = new Vue({
+        el:'#appSubStyle',
+        data:{
+            width:100
+        }
+    })
+</script>
+</html>

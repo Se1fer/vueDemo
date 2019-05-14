@@ -39,8 +39,53 @@
         <br>
         选中的值：{{checked}}
     </div>
+    <div id="appSelected">
+        <select v-model="selected" multiple>
+            <option>html</option>
+            <option value="js">javascript</option>
+            <option>css</option>
+        </select>
+        <p>选项：{{selected}}</p>
+    </div>
+    <div id="appBind">
+        <input type="radio" v-model="picked" :value="value">
+        <label>单选按钮</label>
+        <p>{{picked}}</p>
+        <p>{{value}}</p>
+    </div>
+    <!-- 选中的时候 toggle == value1 , toggle == value2,checkbox 好像没有这两个属性，不清楚 true-value和false-value是那边来的。 -->
+    <div id="appBindCheckBox">
+        <input type="checkbox" v-model="toggle" :true-value="value1" :false-value="value2">
+        <p>复选框</p>
+        <p>{{toggle}}</p>
+        <p>{{value1}}</p>
+        <p>{{value2}}</p>
+        <input id="cb_jquery" type="checkbox" true-value="123" false-value="456">
+    </div>
+    <div id="appList">
+        <select v-model="selected">
+            <option :value="{number:3}">123</option>
+        </select>
+        {{selected.number}}
+    </div>
+    <div id="appLazy">
+        <input type="text" v-model.lazy="message">
+        <p>{{message}}</p>
+    </div>
+    <div id="appNumber">
+        <input type="text" v-model.number="message">
+        <p>{{typeof message}}</p>
+    </div>
+    <div id="appTrim">
+        <input type="text" v-model.trim="message">
+        <p>{{message}}</p>
+    </div>
+    <div id="appComponent">
+        <my-component></my-component>
+    </div>
 </body>
 <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
 <script>
     /* v-model 双向绑定 
     使用 v-model 之后，表单控件中的值不再依赖初始值，只跟所依赖的绑定数据有关。
@@ -75,6 +120,65 @@
         el:"#appCheckBox",
         data:{
             checked:['html','js']
+        }
+    })
+    /* 下拉选择框 */
+    var appSelected = new Vue({
+        el:"#appSelected",
+        data:{
+            selected:['js','html']
+        }
+    });
+    /* v-model 会优先匹配 option的value，如果value值不存在，则匹配text值 */
+    /* v-model 进行值绑定 */
+    var appBind = new Vue({
+        el:"#appBind",
+        data:{
+            picked:true,
+            value:123
+        }
+    });
+    /* v-model 复选框 */
+    var appBindCheckBox = new Vue({
+        el:"#appBindCheckBox",
+        data:{
+            toggle:false,
+            value1:'a',
+            value2:'b'
+        }
+    });
+    /* v-model 绑定对象 */
+    var appList = new Vue({
+        el:"#appList",
+        data:{
+            selected:''
+        }
+    });
+    /* v-model 修饰符 .lazy*/
+    var appLazy= new Vue({
+        el:"#appLazy",
+        data:{
+            message:''
+        }
+    });
+    /* v-model 修饰符 .number 将输入的字符串转成数字类型*/
+    var appNumber = new Vue({
+        el:"#appNumber",
+        data:{
+            message:''
+        }
+    });
+    /* v-model 修饰符 .trim 自动去除输入内容的空格 */
+    var appTrim = new Vue({
+        el:"#appTrim",
+        data:{
+            message:''
+        }
+    });
+    var appComponent = new Vue({
+        el:"#appComponent",
+        data:{
+            
         }
     })
 </script>
